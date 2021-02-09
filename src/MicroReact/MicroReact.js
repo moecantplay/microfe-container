@@ -16,7 +16,6 @@ const MicroReact = ({ history, name, host, document, window }) => {
     fetch(`${host}/asset-manifest.json`)
       .then(res => res.json())
       .then(manifest => {
-        console.log(manifest);
         const script = document.createElement('script');
         script.id = scriptId;
         script.crossOrigin = '';
