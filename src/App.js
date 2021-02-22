@@ -3,15 +3,18 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import AppHeader from './AppHeader';
 import MicroReact from './MicroReact/MicroReact';
 import MicroSvelte from './MicroSvelte/MicroSvelte';
+import MicroVue from './MicroVue/MicroVue';
 import About from './About';
 
 const {
   REACT_APP_BROWSE_HOST: browseHost,
   REACT_APP_RESTAURANT_HOST: restaurantHost,
-  REACT_APP_OTHER_HOST: otherHost,
+  REACT_APP_SVELTE_HOST: svelteHost,
+  REACT_APP_VUE_HOST: vueHost
 } = process.env;
 
 let numRestaurants = 0;
+
 fetch(`${process.env.REACT_APP_CONTENT_HOST}/restaurants.json`)
   .then(res => res.json())
   .then(restaurants => {
@@ -27,8 +30,11 @@ const Browse = ({ history }) => (
 const Restaurant = ({ history }) => (
   <MicroReact history={history} host={restaurantHost} name="Restaurant" />
 );
-const Other = ({ history }) => (
-  <MicroSvelte history={history} host={otherHost} name="Other" />
+const Svelte = ({ history }) => (
+  <MicroSvelte history={history} host={svelteHost} name="Svelte" />
+);
+const Vue = ({ history }) => (
+  <MicroVue history={history} host={vueHost} name="Vue" />
 );
 
 const Random = () => <Redirect to={`/restaurant/${getRandomRestaurantId()}`} />;
@@ -42,7 +48,8 @@ const App = () => (
         <Route exact path="/restaurant/:id" component={Restaurant} />
         <Route exact path="/random" render={Random} />
         <Route exact path="/about" render={About} />
-        <Route exact path="/other" render={Other} />
+        <Route exact path="/svelte" render={Svelte} />
+        <Route exact path="/vue" render={Vue} />
       </Switch>
     </React.Fragment>
   </BrowserRouter>

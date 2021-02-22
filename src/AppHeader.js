@@ -16,8 +16,12 @@ const navList = [
     route: '/about',
   },
   {
-    title: 'Other Framework',
-    route: '/other',
+    title: 'Svelte',
+    route: '/svelte',
+  },
+  {
+    title: 'Vue',
+    route: '/vue',
   },
 ];
 
