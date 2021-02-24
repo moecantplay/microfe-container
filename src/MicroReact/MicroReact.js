@@ -8,6 +8,7 @@ const MicroReact = ({ history, name, host, document, window }) => {
 
   useEffect(() => {
     const scriptId = `micro-frontend-script-${name}`;
+
     if (document.getElementById(scriptId)) {
       renderMicroReact();
       return;

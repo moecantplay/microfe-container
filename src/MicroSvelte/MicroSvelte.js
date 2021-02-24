@@ -9,6 +9,10 @@ const MicroSvelte = ({ history, name, host, document, window }) => {
     const scriptId = `micro-frontend-script-${name}`;
 
     const loadJS = (url, implementationCode) => {
+      if (document.getElementById(scriptId)) {
+        return;
+      }
+
       const script = document.createElement('script');
       script.type = 'module';
       script.id = scriptId;
