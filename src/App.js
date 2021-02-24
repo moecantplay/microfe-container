@@ -1,67 +1,58 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import AppHeader from './AppHeader';
-import MicroReact from './MicroReact/MicroReact.js';
-import MicroSvelte from './MicroSvelte/MicroSvelte.js';
+import MicroReact from './MicroReact/MicroReact';
+import MicroSvelte from './MicroSvelte/MicroSvelte';
+import MicroVue from './MicroVue/MicroVue';
 import About from './About';
 
-const App = () => {
-  const {
-    REACT_APP_BROWSE_HOST: browseHost,
-    REACT_APP_RESTAURANT_HOST: restaurantHost,
-    REACT_APP_OTHER_HOST: otherHost,
-  } = process.env;
+const {
+  REACT_APP_BROWSE_HOST: browseHost,
+  REACT_APP_RESTAURANT_HOST: restaurantHost,
+  REACT_APP_SVELTE_HOST: svelteHost,
+  REACT_APP_VUE_HOST: vueHost
+} = process.env;
 
-  const [loading, setLoading] = useState(false);
-  const [numResto, setNumResto] = useState(0);
+let numRestaurants = 0;
 
-  useEffect(() => {
-    setLoading(true);
-    fetch(`${process.env.REACT_APP_CONTENT_HOST}/restaurants.json`)
-      .then(res => res.json())
-      .then(restaurants => {
-        setNumResto(restaurants.length);
-        setLoading(false);
-      });
-  }, []);
+fetch(`${process.env.REACT_APP_CONTENT_HOST}/restaurants.json`)
+  .then(res => res.json())
+  .then(restaurants => {
+    numRestaurants = restaurants.length;
+  });
 
-  const getRandomRestaurantId = () =>
-    setNumResto(Math.floor(Math.random() * numResto) + 1);
+const getRandomRestaurantId = () =>
+  Math.floor(Math.random() * numRestaurants) + 1;
 
-  const Browse = ({ history }) => (
-    <MicroReact history={history} host={browseHost} name="Browse" />
-  );
-  const Restaurant = ({ history }) => (
-    <MicroReact history={history} host={restaurantHost} name="Restaurant" />
-  );
-  const Other = ({ history }) => (
-    <MicroSvelte history={history} host={otherHost} name="Other" />
-  );
+const Browse = ({ history }) => (
+  <MicroReact history={history} host={browseHost} name="Browse" />
+);
+const Restaurant = ({ history }) => (
+  <MicroReact history={history} host={restaurantHost} name="Restaurant" />
+);
+const Svelte = ({ history }) => (
+  <MicroSvelte history={history} host={svelteHost} name="Svelte" />
+);
+const Vue = ({ history }) => (
+  <MicroVue history={history} host={vueHost} name="Vue" />
+);
 
-  const Random = () => (
-    <Redirect to={`/restaurant/${getRandomRestaurantId()}`} />
-  );
+const Random = () => <Redirect to={`/restaurant/${getRandomRestaurantId()}`} />;
 
-  return (
-    <>
-      {loading ? (
-        'Loading...'
-      ) : (
-        <BrowserRouter>
-          <React.Fragment>
-            <AppHeader />
-            <Switch>
-              <Route exact path="/" component={Browse} />
-              <Route exact path="/restaurant/:id" component={Restaurant} />
-              <Route exact path="/random" render={Random} />
-              <Route exact path="/about" render={About} />
-              <Route exact path="/other" render={Other} />
-            </Switch>
-          </React.Fragment>
-        </BrowserRouter>
-      )}
-    </>
-  );
-};
+const App = () => (
+  <BrowserRouter>
+    <React.Fragment>
+      <AppHeader />
+      <Switch>
+        <Route exact path="/" component={Browse} />
+        <Route exact path="/restaurant/:id" component={Restaurant} />
+        <Route exact path="/random" render={Random} />
+        <Route exact path="/about" render={About} />
+        <Route exact path="/svelte" render={Svelte} />
+        <Route exact path="/vue" render={Vue} />
+      </Switch>
+    </React.Fragment>
+  </BrowserRouter>
+);
 
 export default App;
