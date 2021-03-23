@@ -3,11 +3,8 @@ import React, { useEffect } from 'react';
 const MicroReact = ({ history, name, host }) => {
   const scriptId = `micro-frontend-script-${name}`;
 
-  const renderMicroReact = () => {
-    if (window[`render${name}`]) {
-      window[`render${name}`](`${name}-container`, history);
-    }
-  };
+  const renderMicroReact = () =>
+    window[`render${name}`](`${name}-container`, history);
 
   const fetchScript = () => {
     fetch(`${host}/asset-manifest.json`)
