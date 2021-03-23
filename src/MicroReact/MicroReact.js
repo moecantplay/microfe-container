@@ -6,26 +6,7 @@ const MicroReact = ({ history, name, host }) => {
   const renderMicroReact = () =>
     window[`render${name}`](`${name}-container`, history);
 
-  // const fetchScript = () => {
-  //   fetch(`${host}/asset-manifest.json`)
-  //     .then(res => res.json())
-  //     .then(manifest => {
-  //       const script = document.createElement('script');
-  //       script.id = scriptId;
-  //       script.crossOrigin = '';
-  //       script.src = `${host}${manifest['main.js']}`;
-  //       script.onload = renderMicroReact;
-  //       document.head.appendChild(script);
-  //     });
-  // };
-
-  useEffect(() => {
-    if (document.getElementById(scriptId)) {
-      renderMicroReact();
-      return;
-    }
-
-    // fetchScript();
+  const fetchScript = () => {
     fetch(`${host}/asset-manifest.json`)
       .then(res => res.json())
       .then(manifest => {
@@ -36,6 +17,15 @@ const MicroReact = ({ history, name, host }) => {
         script.onload = renderMicroReact;
         document.head.appendChild(script);
       });
+  };
+
+  useEffect(() => {
+    if (document.getElementById(scriptId)) {
+      renderMicroReact();
+      return;
+    }
+
+    fetchScript();
   }, []);
 
   useEffect(() => {
